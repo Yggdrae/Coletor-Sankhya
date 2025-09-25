@@ -1,0 +1,14 @@
+/* eslint-disable */
+import * as Router from 'expo-router';
+
+export * from 'expo-router';
+
+declare module 'expo-router' {
+  export namespace ExpoRouter {
+    export interface __routes<T extends string | object = string> {
+      hrefInputParams: { pathname: Router.RelativePathString, params?: Router.UnknownInputParams } | { pathname: Router.ExternalPathString, params?: Router.UnknownInputParams } | { pathname: `/`; params?: Router.UnknownInputParams; } | { pathname: `/_sitemap`; params?: Router.UnknownInputParams; } | { pathname: `${'/(tabs)'}/scanner` | `/scanner`; params?: Router.UnknownInputParams; } | { pathname: `/components/ThemedView`; params?: Router.UnknownInputParams; } | { pathname: `/components/ThemedSafeArea`; params?: Router.UnknownInputParams; } | { pathname: `/context/themeProvider`; params?: Router.UnknownInputParams; } | { pathname: `/theme/theme`; params?: Router.UnknownInputParams; };
+      hrefOutputParams: { pathname: Router.RelativePathString, params?: Router.UnknownOutputParams } | { pathname: Router.ExternalPathString, params?: Router.UnknownOutputParams } | { pathname: `/`; params?: Router.UnknownOutputParams; } | { pathname: `/_sitemap`; params?: Router.UnknownOutputParams; } | { pathname: `${'/(tabs)'}/scanner` | `/scanner`; params?: Router.UnknownOutputParams; } | { pathname: `/components/ThemedView`; params?: Router.UnknownOutputParams; } | { pathname: `/components/ThemedSafeArea`; params?: Router.UnknownOutputParams; } | { pathname: `/context/themeProvider`; params?: Router.UnknownOutputParams; } | { pathname: `/theme/theme`; params?: Router.UnknownOutputParams; };
+      href: Router.RelativePathString | Router.ExternalPathString | `/${`?${string}` | `#${string}` | ''}` | `/_sitemap${`?${string}` | `#${string}` | ''}` | `${'/(tabs)'}/scanner${`?${string}` | `#${string}` | ''}` | `/scanner${`?${string}` | `#${string}` | ''}` | `/components/ThemedView${`?${string}` | `#${string}` | ''}` | `/components/ThemedSafeArea${`?${string}` | `#${string}` | ''}` | `/context/themeProvider${`?${string}` | `#${string}` | ''}` | `/theme/theme${`?${string}` | `#${string}` | ''}` | { pathname: Router.RelativePathString, params?: Router.UnknownInputParams } | { pathname: Router.ExternalPathString, params?: Router.UnknownInputParams } | { pathname: `/`; params?: Router.UnknownInputParams; } | { pathname: `/_sitemap`; params?: Router.UnknownInputParams; } | { pathname: `${'/(tabs)'}/scanner` | `/scanner`; params?: Router.UnknownInputParams; } | { pathname: `/components/ThemedView`; params?: Router.UnknownInputParams; } | { pathname: `/components/ThemedSafeArea`; params?: Router.UnknownInputParams; } | { pathname: `/context/themeProvider`; params?: Router.UnknownInputParams; } | { pathname: `/theme/theme`; params?: Router.UnknownInputParams; };
+    }
+  }
+}
