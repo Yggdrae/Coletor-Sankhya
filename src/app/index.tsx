@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { getData } from '@/src/hooks/useAsyncStorage';
 
 export default function Page() {
-  const { replace } = useRouter();
+  const { replace, push } = useRouter();
   const [visible, setVisible] = useState(false);
   const [username, setUsername] = useState<string>("");
   const [pass, setPass] = useState("");
@@ -37,8 +37,8 @@ export default function Page() {
 
   useEffect(() => {
     const checkDomainConfig = async () => {
-      const alreadyInitialized = await getData('domain');
-      if (!alreadyInitialized) replace('domainConfig' as RelativePathString)
+      const domainConfig = await getData('domain');
+      if (!domainConfig) push('/domainConfig' as RelativePathString)
     }
 
     checkDomainConfig();
