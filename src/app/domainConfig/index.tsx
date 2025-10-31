@@ -41,8 +41,12 @@ export default function DomainConfig() {
 
     useEffect(() => {
         const checkDomainConfig = async () => {
-            const alreadyInitialized = await getData('domain');
-            if (!alreadyInitialized) setFirstConfig(true);
+            const domainConfig = await getData('domain');
+            if (!domainConfig) setFirstConfig(true);
+            else {
+                setDomain(domainConfig.domain);
+                setPort(domainConfig.port);
+            }
         }
 
         checkDomainConfig();
