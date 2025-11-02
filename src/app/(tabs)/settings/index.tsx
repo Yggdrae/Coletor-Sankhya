@@ -1,9 +1,8 @@
 import { ThemedSafeAreaView } from "@/src/components/ThemedSafeArea";
 import { ThemedView } from "@/src/components/ThemedView";
 import { useThemeSwitcher } from "@/src/context/themeProvider";
-import { useState } from "react";
-// NOVO: Importar Pressable
-import { StyleSheet, Pressable } from "react-native";
+import { useState, useRef } from "react";
+import { StyleSheet, TextInput as RNTextInput } from "react-native";
 import {
   Avatar,
   Divider,
@@ -31,11 +30,15 @@ export default function Settings() {
     null
   );
 
+  const textInputRef = useRef<RNTextInput | null>(null);
+
   const isDarkTheme = theme === "dark";
 
   const handleSelectEquipment = (equipment: string | null) => {
     setSelectedEquipment(equipment);
-    closeMenu();
+
+    textInputRef.current?.blur(); /* 
+    closeMenu(); */
   };
 
   return (
@@ -66,6 +69,7 @@ export default function Settings() {
             anchorPosition="bottom"
             anchor={
               <TextInput
+                ref={textInputRef}
                 label="Equipamento"
                 mode="outlined"
                 value={selectedEquipment ?? ""}
@@ -93,7 +97,7 @@ export default function Settings() {
             <Divider style={styles.divider} />
             <Menu.Item
               onPress={() => handleSelectEquipment(null)}
-              title="Nenhum (Desconectar)"
+              title="Nenhum"
               leadingIcon="cancel"
             />
           </Menu>
