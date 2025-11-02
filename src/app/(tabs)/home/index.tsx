@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
         gap: 16,
     },
     card: {
-        width: 150,
+        width: "45%",
         height: 120,
         justifyContent: 'center',
     },
