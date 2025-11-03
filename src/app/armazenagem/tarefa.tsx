@@ -125,7 +125,7 @@ export default function TarefaArmazenagemScreen() {
     if (!data.raw) return;
 
     const scannedData = data.raw;
-    setIsScanning(false); // Fecha o modal
+    setIsScanning(false);
 
     if (etapa === "PEGAR") {
       if (origemRef.current?.isFocused()) {
@@ -239,19 +239,21 @@ export default function TarefaArmazenagemScreen() {
         onRequestClose={() => setIsScanning(false)}
         animationType="slide"
       >
-        <ThemedView style={styles.scannerContainer}>
-          <Appbar>
-            <Appbar.BackAction onPress={() => setIsScanning(false)} />
-            <Appbar.Content title="Escanear Código" />
-          </Appbar>
-          <CameraView
-            style={styles.camera}
-            facing={"back"}
-            onBarcodeScanned={handleScan}
-          >
-            <BarcodeMask edgeColor="#6200ee" showAnimatedLine={true} />
-          </CameraView>
-        </ThemedView>
+        <ThemedSafeAreaView>
+          <ThemedView style={styles.scannerContainer}>
+            <Appbar>
+              <Appbar.BackAction onPress={() => setIsScanning(false)} />
+              <Appbar.Content title="Escanear Código" />
+            </Appbar>
+            <CameraView
+              style={styles.camera}
+              facing={"back"}
+              onBarcodeScanned={handleScan}
+            >
+              <BarcodeMask edgeColor="#6200ee" showAnimatedLine={true} />
+            </CameraView>
+          </ThemedView>
+        </ThemedSafeAreaView>
       </Modal>
     </ThemedSafeAreaView>
   );
