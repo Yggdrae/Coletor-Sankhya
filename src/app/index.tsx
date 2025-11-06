@@ -1,9 +1,10 @@
-import { StyleSheet, View, Image } from 'react-native'
-import { Appbar, Button, Snackbar, TextInput } from 'react-native-paper'
-import { ThemedView } from '../components/ThemedView';
-import { RelativePathString, useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
-import { getData } from '@/src/hooks/useAsyncStorage';
+import { StyleSheet, View, Image } from "react-native";
+import { Appbar, Button, Snackbar, TextInput } from "react-native-paper";
+import { ThemedView } from "../components/ThemedView";
+import { RelativePathString, useRouter } from "expo-router";
+import { useEffect, useState } from "react";
+import { getData } from "@/src/hooks/useAsyncStorage";
+import { ThemedSafeAreaView } from "../components/ThemedSafeArea";
 
 export default function Page() {
   const { replace, push } = useRouter();
@@ -17,9 +18,8 @@ export default function Page() {
 
   const login = () => {
     if (!checkFields()) return;
-    else replace('/(tabs)/home');
-  }
-
+    else replace("/(tabs)/home");
+  };
 
   const checkFields = () => {
     let newErrors = 0;
@@ -33,78 +33,96 @@ export default function Page() {
     }
 
     return true;
-  }
+  };
 
   useEffect(() => {
     const checkDomainConfig = async () => {
-      const domainConfig = await getData('domain');
-      if (!domainConfig) push('/domainConfig' as RelativePathString)
-    }
+      const domainConfig = await getData("domain");
+      if (!domainConfig) push("/domainConfig" as RelativePathString);
+    };
 
     checkDomainConfig();
   }, []);
 
   return (
-    <ThemedView style={styles.container}>
+    <ThemedSafeAreaView>
       <Appbar>
-        <Appbar.Action icon="cog" onPress={() => replace('/domainConfig' as RelativePathString)} />
+        <Appbar.Action
+          icon="cog"
+          onPress={() => replace("/domainConfig" as RelativePathString)}
+        />
       </Appbar>
-
-      <ThemedView style={styles.contentContainer}>
+      <ThemedView style={styles.container}>
         <Image
           source={require("@/src/assets/images/login.png")}
           style={styles.image}
         />
 
-        <TextInput style={styles.input} placeholder='Usuário' value={username} onChangeText={setUsername} />
-        <TextInput style={styles.input} placeholder='Senha' value={pass} onChangeText={setPass} secureTextEntry />
+        <ThemedView style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Usuário"
+            value={username}
+            onChangeText={setUsername}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Senha"
+            value={pass}
+            onChangeText={setPass}
+            secureTextEntry
+          />
+        </ThemedView>
 
-        <View style={styles.buttonView}>
-          <Button style={styles.button} mode='outlined'>Cadastrar</Button>
-          <Button style={styles.button} mode='contained' onPress={login}>Entrar</Button>
-        </View>
-
+        <ThemedView style={styles.buttonView}>
+          <Button style={styles.button} mode="outlined">
+            Cadastrar
+          </Button>
+          <Button style={styles.button} mode="contained" onPress={login}>
+            Entrar
+          </Button>
+        </ThemedView>
       </ThemedView>
-
       <Snackbar
         visible={visible}
         onDismiss={onDismissSnackBar}
         wrapperStyle={{
-          alignSelf: 'center'
+          alignSelf: "center",
         }}
       >
         Há campos sem preenchimento!
       </Snackbar>
-    </ThemedView>
+    </ThemedSafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  contentContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 20,
-    gap: 20,
+    justifyContent: "center",
+    gap: 30,
   },
   image: {
     width: 200,
     height: 200,
     alignSelf: "center",
+    marginTop: -150,
   },
   input: {
     width: "90%",
     height: 50,
-    alignSelf: 'center'
+    alignSelf: "center",
+  },
+  inputContainer: {
+    gap: 20,
   },
   buttonView: {
-    alignSelf: 'center',
+    alignSelf: "center",
     flexDirection: "row",
-    gap: 5
+    gap: 20,
   },
   button: {
-    height: 42
-  }
+    height: 42,
+    width: "40%",
+  },
 });

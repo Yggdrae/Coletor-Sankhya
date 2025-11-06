@@ -23,12 +23,10 @@ function RootLayoutContent() {
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="domainConfig/index" options={{ headerShown: false }} />
-          <Stack.Screen name="scanner/index" options={{ headerShown: false }} />
           <Stack.Screen name="armazenagem" options={{ headerShown: false }} />
           <Stack.Screen name="recebimento" options={{ headerShown: false }} />
           <Stack.Screen name="separacao" options={{ headerShown: false }} />
           <Stack.Screen name="expedicao" options={{ headerShown: false }} />
-          <Stack.Screen name="conferencia" options={{ headerShown: false }} />
           <Stack.Screen name="index" options={{ headerShown: false }} />
         </Stack>
         <StatusBar style="auto" />
