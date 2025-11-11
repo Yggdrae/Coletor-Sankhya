@@ -8,30 +8,43 @@ import React, {
 import { getData, saveData } from "@/src/service/storage";
 import { setAxiosBaseURL } from "@/src/service/api";
 
-const DOMAIN_STORAGE_KEY = "@api_domain";
+const DOMAIN_STORAGE_KEY = "domain";
+
+type DomainConfig = {
+  domain: string;
+  port: string;
+};
 
 type ApiContextType = {
   domain: string | null;
+  port: string | null;
   isLoading: boolean;
-  saveDomain: (domain: string) => Promise<void>;
+  isFirstConfig: boolean;
+  saveDomain: (domain: string, port: string) => Promise<void>;
 };
 
 const ApiConfigContext = createContext<ApiContextType | undefined>(undefined);
 
 export function ApiConfigProvider({ children }: { children: ReactNode }) {
   const [domain, setDomain] = useState<string | null>(null);
+  const [port, setPort] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isFirstConfig, setIsFirstConfig] = useState(false);
 
   useEffect(() => {
     const loadDomain = async () => {
       try {
-        const savedDomain = (await getData(DOMAIN_STORAGE_KEY)) as
-          | string
-          | null;
+        const savedConfig = (await getData(
+          DOMAIN_STORAGE_KEY
+        )) as DomainConfig | null;
 
-        if (savedDomain) {
-          setDomain(savedDomain);
-          setAxiosBaseURL(savedDomain);
+        if (savedConfig) {
+          setDomain(savedConfig.domain);
+          setPort(savedConfig.port);
+          const url = `http://${savedConfig.domain}:${savedConfig.port}`;
+          setAxiosBaseURL(url);
+        } else {
+          setIsFirstConfig(true);
         }
       } catch (error) {
         console.error("Failed to load domain from storage:", error);
@@ -43,19 +56,21 @@ export function ApiConfigProvider({ children }: { children: ReactNode }) {
     loadDomain();
   }, []);
 
-  const saveDomain = async (newDomain: string) => {
+  const saveDomain = async (newDomain: string, newPort: string) => {
     try {
-      let formattedDomain = newDomain;
-      if (
-        !formattedDomain.startsWith("http://") &&
-        !formattedDomain.startsWith("https://")
-      ) {
-        formattedDomain = `http://${formattedDomain}`;
-      }
+      const config: DomainConfig = {
+        domain: newDomain.trim(),
+        port: newPort.trim(),
+      };
 
-      await saveData(DOMAIN_STORAGE_KEY, formattedDomain);
-      setDomain(formattedDomain);
-      setAxiosBaseURL(formattedDomain);
+      await saveData(DOMAIN_STORAGE_KEY, config);
+
+      setDomain(config.domain);
+      setPort(config.port);
+      setIsFirstConfig(false);
+
+      const url = `http://${config.domain}:${config.port}`;
+      setAxiosBaseURL(url);
     } catch (error) {
       console.error("Failed to save domain:", error);
     }
@@ -66,7 +81,9 @@ export function ApiConfigProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <ApiConfigContext.Provider value={{ domain, isLoading, saveDomain }}>
+    <ApiConfigContext.Provider
+      value={{ domain, port, isLoading, isFirstConfig, saveDomain }}
+    >
       {children}
     </ApiConfigContext.Provider>
   );
