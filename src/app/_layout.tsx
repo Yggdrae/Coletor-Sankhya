@@ -3,13 +3,20 @@ import { StatusBar } from "expo-status-bar";
 import { lightTheme, darkTheme } from "@/src/theme/theme";
 import { PaperProvider } from "react-native-paper";
 import { ThemeProvider, useThemeSwitcher } from "@/src/context/themeProvider";
-import { ThemedSafeAreaView } from "@/src/components/ThemedSafeArea"; 
+import { ThemedSafeAreaView } from "@/src/components/ThemedSafeArea";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ApiConfigProvider } from "../context/apiConfigProvider";
+
+const queryClient = new QueryClient();
 
 export default function RootLayout() {
-
   return (
     <ThemeProvider>
-      <RootLayoutContent />
+      <ApiConfigProvider>
+        <QueryClientProvider client={queryClient}>
+          <RootLayoutContent />
+        </QueryClientProvider>
+      </ApiConfigProvider>
     </ThemeProvider>
   );
 }
@@ -22,7 +29,10 @@ function RootLayoutContent() {
       <ThemedSafeAreaView>
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="domainConfig/index" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="domainConfig/index"
+            options={{ headerShown: false }}
+          />
           <Stack.Screen name="armazenagem" options={{ headerShown: false }} />
           <Stack.Screen name="recebimento" options={{ headerShown: false }} />
           <Stack.Screen name="separacao" options={{ headerShown: false }} />
