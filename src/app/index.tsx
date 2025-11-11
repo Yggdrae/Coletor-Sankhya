@@ -5,20 +5,28 @@ import { RelativePathString, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { getData } from "@/src/service/storage";
 import { ThemedSafeAreaView } from "../components/ThemedSafeArea";
+import { useLogin } from "../hooks/useLogin";
 
 export default function Page() {
   const { replace, push } = useRouter();
   const [visible, setVisible] = useState(false);
   const [username, setUsername] = useState<string>("");
   const [pass, setPass] = useState("");
+  const { mutateAsync: performLogin } = useLogin();
 
   const onToggleSnackBar = () => setVisible(!visible);
 
   const onDismissSnackBar = () => setVisible(false);
 
-  const login = () => {
-    if (!checkFields()) return;
-    else replace("/(tabs)/home");
+  const login = async () => {
+    try {
+      if (!checkFields()) return;
+      await performLogin({ username, pass });
+      push("/(tabs)/home");
+    } catch (error: any) {
+      console.log(error.message);
+      return;
+    }
   };
 
   const checkFields = () => {
