@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { useColorScheme as _useColorScheme } from "react-native";
-import { getData, saveData } from "../hooks/useAsyncStorage";
+import { getData, saveData } from "../service/storage";
 
 type Theme = "light" | "dark";
 

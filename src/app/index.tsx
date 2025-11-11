@@ -3,7 +3,7 @@ import { Appbar, Button, Snackbar, TextInput } from "react-native-paper";
 import { ThemedView } from "../components/ThemedView";
 import { RelativePathString, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { getData } from "@/src/hooks/useAsyncStorage";
+import { getData } from "@/src/service/storage";
 import { ThemedSafeAreaView } from "../components/ThemedSafeArea";
 
 export default function Page() {

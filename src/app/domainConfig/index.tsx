@@ -3,7 +3,7 @@ import { Appbar, Button, Snackbar, Text, TextInput } from 'react-native-paper'
 import { ThemedView } from '@/src/components/ThemedView';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { getData, saveData } from '@/src/hooks/useAsyncStorage';
+import { getData, saveData } from '@/src/service/storage';
 
 export default function DomainConfig() {
     const { replace } = useRouter();
