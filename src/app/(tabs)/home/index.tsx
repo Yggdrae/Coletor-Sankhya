@@ -1,4 +1,5 @@
 import { ThemedSafeAreaView } from "@/src/components/ThemedSafeArea";
+import { useUser } from "@/src/context/userContext";
 import { RelativePathString, useRouter } from "expo-router";
 import { ScrollView, StyleSheet } from "react-native";
 import { Card, Text, Icon, Appbar } from "react-native-paper";
@@ -20,24 +21,24 @@ export default function Home() {
       path: "/armazenagem",
     },
     {
+      label: "Conferência",
+      icon: "clipboard-text-search",
+      path: "/conferencia",
+    },
+    {
+      label: "Conferência de Volume",
+      icon: "package-variant-closed-check",
+      path: "/volume",
+    },
+    {
       label: "Recebimento",
       icon: "inbox-arrow-down",
       path: "/recebimento",
     },
     {
       label: "Separação",
-      icon: "package-variant-closed",
+      icon: "cart-arrow-down",
       path: "/separacao",
-    },
-    {
-      label: "Expedição",
-      icon: "truck-fast",
-      path: "/expedicao",
-    },
-    {
-      label: "Conferência",
-      icon: "clipboard-text-search",
-      path: "/conferencia",
     },
   ];
 

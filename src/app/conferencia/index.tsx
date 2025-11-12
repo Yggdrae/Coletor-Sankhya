@@ -171,7 +171,7 @@ export default function ConferenciaPedidoScreen() {
     <ThemedSafeAreaView>
       <Appbar>
         <Appbar.BackAction onPress={() => back()} />
-        <Appbar.Content title="Conferir Pedido" />
+        <Appbar.Content title="Conferência" />
       </Appbar>
       <ThemedView style={styles.container}>
         {etapa === "DOCA" && (

@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Modal,
   TextInput as RNTextInput,
+  FlatList,
 } from "react-native";
 import {
   Appbar,
@@ -14,7 +15,7 @@ import {
   Text,
   TextInput,
   useTheme,
-  SegmentedButtons,
+  List,
 } from "react-native-paper";
 import {
   BarcodeScanningResult,
@@ -23,22 +24,20 @@ import {
 } from "expo-camera";
 import BarcodeMask from "react-native-barcode-mask";
 
-type EtapaConferencia = "DOCA" | "PRODUTO";
+type EtapaConfVolume = "DOCA" | "VOLUME";
 
-export default function ConferenciaEntradaScreen() {
+export default function Volume() {
   const { back } = useRouter();
+  const theme = useTheme();
 
-  const [etapa, setEtapa] = useState<EtapaConferencia>("DOCA");
+  const [etapa, setEtapa] = useState<EtapaConfVolume>("DOCA");
 
   const [docaLida, setDocaLida] = useState("");
-  const [produtoLido, setProdutoLido] = useState("");
-  const [quantidade, setQuantidade] = useState("");
-  const [quantidadeAvariada, setQuantidadeAvariada] = useState("0");
+  const [volumeLido, setVolumeLido] = useState("");
+  const [volumesConferidos, setVolumesConferidos] = useState<string[]>([]); // Lista de volumes
 
   const docaRef = useRef<RNTextInput>(null);
-  const produtoRef = useRef<RNTextInput>(null);
-  const qtdRef = useRef<RNTextInput>(null);
-  const avariaRef = useRef<RNTextInput>(null);
+  const volumeRef = useRef<RNTextInput>(null);
 
   const [permission, requestPermission] = useCameraPermissions();
   const [isScanning, setIsScanning] = useState(false);
@@ -53,102 +52,93 @@ export default function ConferenciaEntradaScreen() {
       return;
     }
     setDocaLida(value.trim());
-
-    setEtapa("PRODUTO");
-    setTimeout(() => produtoRef.current?.focus(), 100);
+    setEtapa("VOLUME");
+    setTimeout(() => volumeRef.current?.focus(), 100);
   };
 
-  const handleProximoItem = () => {
-    console.log({
-      doca: docaLida,
-      produto: produtoLido,
-      qtd: quantidade,
-      avaria: quantidadeAvariada,
-    });
-
-    setProdutoLido("");
-    setQuantidade("");
-    setQuantidadeAvariada("0");
-    produtoRef.current?.focus();
-    Alert.alert("Item salvo", "Leia o próximo produto.");
-  };
-
-  const handleEnviar = () => {
-    if (!produtoLido || !quantidade) {
-      Alert.alert("Erro", "Produto e Quantidade são obrigatórios.");
+  const handleContinuar = (value: string = volumeLido) => {
+    const volume = value.trim();
+    if (!volume) {
+      Alert.alert("Erro", "Volume não pode ser vazio.");
+      return;
+    }
+    if (volumesConferidos.includes(volume)) {
+      Alert.alert("Atenção", "Este volume já foi conferido.");
+      setVolumeLido("");
       return;
     }
 
-    console.log("Enviando conferência da doca:", docaLida);
-    handleProximoItem();
+    setVolumesConferidos((prev) => [volume, ...prev]);
+    setVolumeLido("");
+    volumeRef.current?.focus();
+  };
 
-    Alert.alert("Sucesso", "Conferência da doca enviada.", [
-      { text: "OK", onPress: () => back() },
-    ]);
+  const handleEnviar = () => {
+    if (volumesConferidos.length === 0 && !volumeLido) {
+      Alert.alert("Erro", "Nenhum volume foi conferido.");
+      return;
+    }
+
+    if (volumeLido) {
+      handleContinuar();
+    }
+
+    console.log("Enviando volumes:", volumesConferidos);
+
+    Alert.alert(
+      "Sucesso!",
+      `Conferência de Volumes realizada com sucesso!\nDoca: ${docaLida}`,
+      [{ text: "OK", onPress: () => back() }]
+    );
   };
 
   const openScanner = async () => {
     if (!permission) return;
+
     if (!permission.granted) {
       const { status } = await requestPermission();
-      if (status !== "granted") {
-        Alert.alert("Permissão negada", "Precisamos da permissão da câmera.");
-        return;
+      if (status === "granted") {
+        setIsScanning(true);
+      } else {
+        Alert.alert(
+          "Permissão negada",
+          "Precisamos da permissão da câmera para escanear."
+        );
       }
+    } else {
+      setIsScanning(true);
     }
-    setIsScanning(true);
   };
 
   const handleScan = (data: BarcodeScanningResult) => {
     if (!data.raw) return;
-
     const scannedData = data.raw;
     setIsScanning(false);
 
     if (etapa === "DOCA") {
       setDocaLida(scannedData);
       handleConfirmaDoca(scannedData);
-    } else if (etapa === "PRODUTO") {
-      if (produtoRef.current?.isFocused()) {
-        setProdutoLido(scannedData);
-        qtdRef.current?.focus();
-      }
+    } else if (etapa === "VOLUME") {
+      setVolumeLido(scannedData);
+      handleContinuar(scannedData);
     }
   };
 
   return (
     <ThemedSafeAreaView>
       <Appbar>
-        <Appbar.Content title="Entrada" />
         <Appbar.BackAction onPress={() => back()} />
+        <Appbar.Content title="Conferir Volume" />
       </Appbar>
       <ThemedView style={styles.container}>
-        <SegmentedButtons
-          value={etapa}
-          onValueChange={() => {}}
-          buttons={[
-            {
-              value: "DOCA",
-              label: "Doca",
-              icon: etapa === "DOCA" ? "check" : undefined,
-            },
-            {
-              value: "PRODUTO",
-              label: "Dados produto",
-              icon: etapa === "PRODUTO" ? "check" : undefined,
-            },
-          ]}
-          style={styles.stepper}
-        />
-
         {etapa === "DOCA" && (
           <ThemedView style={styles.form}>
             <Text variant="headlineSmall" style={styles.header}>
-              Qual doca receberá os itens?
+              Qual a doca?
             </Text>
             <TextInput
               ref={docaRef}
-              label="Informar código da doca"
+              label="Escanear Doca de Saída"
               value={docaLida}
               onChangeText={setDocaLida}
               mode="outlined"
@@ -161,51 +151,30 @@ export default function ConferenciaEntradaScreen() {
           </ThemedView>
         )}
 
-        {etapa === "PRODUTO" && (
+        {etapa === "VOLUME" && (
           <ThemedView style={styles.form}>
             <Text variant="headlineSmall" style={styles.header}>
-              Informe os dados do produto
+              Conferindo Doca: {docaLida}
             </Text>
-            <Text variant="titleMedium">Doca: {docaLida}</Text>
             <TextInput
-              ref={produtoRef}
-              label="Código de Barras do Produto"
-              value={produtoLido}
-              onChangeText={setProdutoLido}
+              ref={volumeRef}
+              label="Confirme o volume"
+              value={volumeLido}
+              onChangeText={setVolumeLido}
               mode="outlined"
               style={styles.input}
-              onSubmitEditing={() => qtdRef.current?.focus()}
+              keyboardType="numeric"
+              onSubmitEditing={() => handleContinuar()} // Enter = Continuar
               right={
                 <TextInput.Icon icon="barcode-scan" onPress={openScanner} />
               }
             />
-            <TextInput
-              ref={qtdRef}
-              label="Quantidade*"
-              value={quantidade}
-              onChangeText={setQuantidade}
-              mode="outlined"
-              style={styles.input}
-              keyboardType="numeric"
-              onSubmitEditing={() => avariaRef.current?.focus()}
-            />
-            <TextInput
-              ref={avariaRef}
-              label="Quantidade avariada"
-              value={quantidadeAvariada}
-              onChangeText={setQuantidadeAvariada}
-              mode="outlined"
-              style={styles.input}
-              keyboardType="numeric"
-              onSubmitEditing={handleProximoItem}
-            />
-
             <Button
               mode="outlined"
-              onPress={handleProximoItem}
+              onPress={() => handleContinuar()}
               style={styles.button}
             >
-              Próximo item
+              Continuar
             </Button>
             <Button
               mode="contained"
@@ -214,15 +183,30 @@ export default function ConferenciaEntradaScreen() {
             >
               Enviar
             </Button>
+
+            <Text variant="titleMedium" style={{ marginTop: 16 }}>
+              Volumes conferidos: {volumesConferidos.length}
+            </Text>
+            <FlatList
+              data={volumesConferidos}
+              keyExtractor={(item) => item}
+              renderItem={({ item }) => (
+                <List.Item
+                  title={`Volume: ${item}`}
+                  left={(props) => <List.Icon {...props} icon="check" />}
+                />
+              )}
+            />
           </ThemedView>
         )}
       </ThemedView>
+
       <Modal visible={isScanning} onRequestClose={() => setIsScanning(false)}>
         <ThemedSafeAreaView>
           <ThemedView style={styles.scannerContainer}>
             <Appbar>
               <Appbar.BackAction onPress={() => setIsScanning(false)} />
-              <Appbar.Content title="Escanear Código" />
+              <Appbar.Content title="Escanear Volume" />
             </Appbar>
             <CameraView style={styles.camera} onBarcodeScanned={handleScan}>
               <BarcodeMask edgeColor="#6200ee" showAnimatedLine={true} />
@@ -237,10 +221,6 @@ export default function ConferenciaEntradaScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  stepper: {
-    paddingHorizontal: 16,
-    paddingTop: 16,
   },
   form: {
     flex: 1,

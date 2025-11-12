@@ -1,10 +1,12 @@
 import { ThemedSafeAreaView } from "@/src/components/ThemedSafeArea";
 import { ThemedView } from "@/src/components/ThemedView";
 import { useThemeSwitcher } from "@/src/context/themeProvider";
+import { useRouter } from "expo-router";
 import { useState, useRef } from "react";
 import { StyleSheet, TextInput as RNTextInput } from "react-native";
 import {
   Avatar,
+  Button,
   Divider,
   List,
   Menu,
@@ -20,6 +22,7 @@ const EQUIPMENTS = [
 ];
 
 export default function Settings() {
+  const { replace } = useRouter();
   const { theme, toggleTheme } = useThemeSwitcher();
 
   const [menuVisible, setMenuVisible] = useState(false);
@@ -40,6 +43,10 @@ export default function Settings() {
     textInputRef.current?.blur(); /* 
     closeMenu(); */
   };
+
+  const logout = () => {
+    replace("/")
+  }
 
   return (
     <ThemedSafeAreaView>
@@ -103,6 +110,9 @@ export default function Settings() {
           </Menu>
         </List.Section>
       </ThemedView>
+      <ThemedView style={styles.logoutSection}>
+        <Button mode="contained" icon="logout" onPress={logout}>Logout</Button>
+      </ThemedView>
     </ThemedSafeAreaView>
   );
 }
@@ -125,4 +135,7 @@ const styles = StyleSheet.create({
   divider: {
     marginVertical: 4,
   },
+  logoutSection: {
+    padding: 24
+  }
 });
