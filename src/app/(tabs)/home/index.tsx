@@ -11,6 +11,7 @@ interface Operation {
 
 export default function Home() {
   const { push } = useRouter();
+  const { userName } = useUser();
 
   const operations: Operation[] = [
     {
@@ -43,7 +44,7 @@ export default function Home() {
   return (
     <ThemedSafeAreaView>
       <Appbar>
-        <Appbar.Content title="Olá, Usuário"/>
+        <Appbar.Content title={`Olá, ${userName === "" ? "Usuário" : userName}`} />
       </Appbar>
       <ScrollView
         style={styles.container}
