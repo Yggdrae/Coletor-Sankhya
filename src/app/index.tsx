@@ -21,7 +21,7 @@ export default function Page() {
   const login = async () => {
     try {
       if (!checkFields()) return;
-      await performLogin({ username, pass });
+      await performLogin({ nome: username, senha: pass });
       push("/(tabs)/home");
     } catch (error: any) {
       console.log(error.message);

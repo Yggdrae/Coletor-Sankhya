@@ -1,6 +1,6 @@
 export interface LoginDTO {
-  username: string;
-  pass: string;
+  nome: string;
+  senha: string;
 }
 
 export interface LoginResponse {
