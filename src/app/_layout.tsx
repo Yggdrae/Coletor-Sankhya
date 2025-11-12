@@ -31,6 +31,7 @@ function RootLayoutContent() {
     <PaperProvider theme={theme === "dark" ? darkTheme : lightTheme}>
       <ThemedSafeAreaView>
         <Stack>
+          <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen
             name="domainConfig/index"
@@ -41,7 +42,6 @@ function RootLayoutContent() {
           <Stack.Screen name="recebimento/index" options={{ headerShown: false }} />
           <Stack.Screen name="separacao/index" options={{ headerShown: false }} />
           <Stack.Screen name="volume/index" options={{ headerShown: false }} />
-          <Stack.Screen name="index" options={{ headerShown: false }} />
         </Stack>
         <StatusBar style="auto" />
       </ThemedSafeAreaView>
