@@ -82,14 +82,9 @@ export default function Page() {
           />
         </ThemedView>
 
-        <ThemedView style={styles.buttonView}>
-          <Button style={styles.button} mode="outlined">
-            Cadastrar
-          </Button>
-          <Button style={styles.button} mode="contained" onPress={login}>
-            Entrar
-          </Button>
-        </ThemedView>
+        <Button style={styles.button} mode="contained" onPress={login}>
+          Entrar
+        </Button>
       </ThemedView>
       <Snackbar
         visible={visible}
@@ -131,6 +126,7 @@ const styles = StyleSheet.create({
   },
   button: {
     height: 42,
-    width: "40%",
+    width: "60%",
+    alignSelf: 'center'
   },
 });
