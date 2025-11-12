@@ -6,6 +6,7 @@ import { ThemeProvider, useThemeSwitcher } from "@/src/context/themeProvider";
 import { ThemedSafeAreaView } from "@/src/components/ThemedSafeArea";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ApiConfigProvider } from "../context/apiConfigProvider";
+import { UserProvider } from "../context/userContext";
 
 const queryClient = new QueryClient();
 
@@ -13,9 +14,11 @@ export default function RootLayout() {
   return (
     <ThemeProvider>
       <ApiConfigProvider>
-        <QueryClientProvider client={queryClient}>
-          <RootLayoutContent />
-        </QueryClientProvider>
+        <UserProvider>
+          <QueryClientProvider client={queryClient}>
+            <RootLayoutContent />
+          </QueryClientProvider>
+        </UserProvider>
       </ApiConfigProvider>
     </ThemeProvider>
   );
@@ -33,10 +36,11 @@ function RootLayoutContent() {
             name="domainConfig/index"
             options={{ headerShown: false }}
           />
-          <Stack.Screen name="armazenagem" options={{ headerShown: false }} />
-          <Stack.Screen name="recebimento" options={{ headerShown: false }} />
-          <Stack.Screen name="separacao" options={{ headerShown: false }} />
-          <Stack.Screen name="expedicao" options={{ headerShown: false }} />
+          <Stack.Screen name="armazenagem/index" options={{ headerShown: false }} />
+          <Stack.Screen name="conferencia/index" options={{ headerShown: false }} />
+          <Stack.Screen name="recebimento/index" options={{ headerShown: false }} />
+          <Stack.Screen name="separacao/index" options={{ headerShown: false }} />
+          <Stack.Screen name="volume/index" options={{ headerShown: false }} />
           <Stack.Screen name="index" options={{ headerShown: false }} />
         </Stack>
         <StatusBar style="auto" />
