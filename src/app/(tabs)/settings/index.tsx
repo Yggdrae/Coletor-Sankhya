@@ -1,23 +1,22 @@
 import { ThemedSafeAreaView } from "@/src/components/ThemedSafeArea";
 import { ThemedView } from "@/src/components/ThemedView";
 import { useThemeSwitcher } from "@/src/context/themeProvider";
+import { useUser } from "@/src/context/userContext";
 import { useRouter } from "expo-router";
 import { useState, useRef } from "react";
 import { StyleSheet, TextInput as RNTextInput } from "react-native";
-import {
-  Avatar,
-  Button,
-  List,
-  Switch,
-} from "react-native-paper";
+import { Avatar, Button, List, Switch } from "react-native-paper";
 
 export default function Settings() {
   const { replace } = useRouter();
   const { theme, toggleTheme } = useThemeSwitcher();
+  const { setUserName, setAccessToken } = useUser();
 
   const isDarkTheme = theme === "dark";
 
   const logout = () => {
+    setUserName("");
+    setAccessToken(undefined);
     replace("/");
   };
 
