@@ -22,6 +22,7 @@ export default function Page() {
     try {
       if (!checkFields()) return;
       await performLogin({ nome: username, senha: pass });
+      
       push("/(tabs)/home");
     } catch (error: any) {
       console.log(error.message);

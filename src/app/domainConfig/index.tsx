@@ -5,6 +5,7 @@ import { ThemedView } from "@/src/components/ThemedView";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { useApiConfig } from "@/src/context/apiConfigProvider";
+import Toast from "react-native-toast-message";
 
 export default function DomainConfig() {
   const { replace } = useRouter();
@@ -16,25 +17,31 @@ export default function DomainConfig() {
     saveDomain,
   } = useApiConfig();
 
-  const [visible, setVisible] = useState(false);
-
   const [domain, setDomain] = useState<string>(initialDomain ?? "");
   const [port, setPort] = useState<string>(initialPort ?? "");
-
-  const onToggleSnackBar = () => setVisible(!visible);
-  const onDismissSnackBar = () => setVisible(false);
 
   const handleSaveConfig = async () => {
     if (!checkFields()) return;
 
     await saveDomain(domain, port);
+    Toast.show({
+      type: "success",
+      text1: "Domínio salvo com sucesso!",
+      position: "top",
+      visibilityTime: 3000,
+    });
 
     replace("/");
   };
 
   const checkFields = () => {
     if (!domain || !port) {
-      onToggleSnackBar();
+      Toast.show({
+        type: "error",
+        text1: "Há campos sem preenchimento!",
+        position: "top",
+        visibilityTime: 3000,
+      });
       return false;
     }
     return true;
@@ -79,14 +86,6 @@ export default function DomainConfig() {
             Salvar
           </Button>
         </View>
-
-        <Snackbar
-          visible={visible}
-          onDismiss={onDismissSnackBar}
-          wrapperStyle={{ alignSelf: "center" }}
-        >
-          Há campos sem preenchimento!
-        </Snackbar>
       </ThemedView>
     </ThemedView>
   );
