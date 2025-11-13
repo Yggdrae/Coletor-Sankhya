@@ -7,46 +7,19 @@ import { StyleSheet, TextInput as RNTextInput } from "react-native";
 import {
   Avatar,
   Button,
-  Divider,
   List,
-  Menu,
   Switch,
-  TextInput,
 } from "react-native-paper";
-
-const EQUIPMENTS = [
-  "Empilhadeira A-01",
-  "Empilhadeira A-02",
-  "Paleteira Elétrica P-05",
-  "Coletor de Dados C-12",
-];
 
 export default function Settings() {
   const { replace } = useRouter();
   const { theme, toggleTheme } = useThemeSwitcher();
 
-  const [menuVisible, setMenuVisible] = useState(false);
-  const openMenu = () => setMenuVisible(true);
-  const closeMenu = () => setMenuVisible(false);
-
-  const [selectedEquipment, setSelectedEquipment] = useState<string | null>(
-    null
-  );
-
-  const textInputRef = useRef<RNTextInput | null>(null);
-
   const isDarkTheme = theme === "dark";
 
-  const handleSelectEquipment = (equipment: string | null) => {
-    setSelectedEquipment(equipment);
-
-    textInputRef.current?.blur(); /* 
-    closeMenu(); */
-  };
-
   const logout = () => {
-    replace("/")
-  }
+    replace("/");
+  };
 
   return (
     <ThemedSafeAreaView>
@@ -66,52 +39,11 @@ export default function Settings() {
             )}
           />
         </List.Section>
-
-        <List.Section>
-          <List.Subheader>Equipamento em Uso</List.Subheader>
-
-          <Menu
-            visible={menuVisible}
-            onDismiss={closeMenu}
-            anchorPosition="bottom"
-            anchor={
-              <TextInput
-                ref={textInputRef}
-                label="Equipamento"
-                mode="outlined"
-                value={selectedEquipment ?? ""}
-                pointerEvents="none"
-                right={
-                  <TextInput.Icon
-                    icon={menuVisible ? "menu-up" : "menu-down"}
-                  />
-                }
-                onFocus={openMenu}
-                onBlur={closeMenu}
-                style={styles.textInputAnchor}
-              />
-            }
-          >
-            {EQUIPMENTS.map((equipment) => (
-              <Menu.Item
-                key={equipment}
-                onPress={() => handleSelectEquipment(equipment)}
-                title={equipment}
-                leadingIcon="forklift"
-              />
-            ))}
-
-            <Divider style={styles.divider} />
-            <Menu.Item
-              onPress={() => handleSelectEquipment(null)}
-              title="Nenhum"
-              leadingIcon="cancel"
-            />
-          </Menu>
-        </List.Section>
       </ThemedView>
       <ThemedView style={styles.logoutSection}>
-        <Button mode="contained" icon="logout" onPress={logout}>Logout</Button>
+        <Button mode="contained" icon="logout" onPress={logout}>
+          Logout
+        </Button>
       </ThemedView>
     </ThemedSafeAreaView>
   );
@@ -136,6 +68,6 @@ const styles = StyleSheet.create({
     marginVertical: 4,
   },
   logoutSection: {
-    padding: 24
-  }
+    padding: 24,
+  },
 });
