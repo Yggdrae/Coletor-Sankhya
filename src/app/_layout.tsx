@@ -7,6 +7,8 @@ import { ThemedSafeAreaView } from "@/src/components/ThemedSafeArea";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ApiConfigProvider } from "../context/apiConfigProvider";
 import { UserProvider } from "../context/userContext";
+import { toastConfig } from "@/src/components/Toast";
+import Toast from "react-native-toast-message";
 
 const queryClient = new QueryClient();
 
@@ -37,13 +39,26 @@ function RootLayoutContent() {
             name="domainConfig/index"
             options={{ headerShown: false }}
           />
-          <Stack.Screen name="armazenagem/index" options={{ headerShown: false }} />
-          <Stack.Screen name="conferencia/index" options={{ headerShown: false }} />
-          <Stack.Screen name="recebimento/index" options={{ headerShown: false }} />
-          <Stack.Screen name="separacao/index" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="armazenagem/index"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="conferencia/index"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="recebimento/index"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="separacao/index"
+            options={{ headerShown: false }}
+          />
           <Stack.Screen name="volume/index" options={{ headerShown: false }} />
         </Stack>
         <StatusBar style="auto" />
+        <Toast config={toastConfig} />
       </ThemedSafeAreaView>
     </PaperProvider>
   );
